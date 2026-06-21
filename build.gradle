@@ -24,7 +24,7 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-	implementation 'com.itextpdf:itext7-core:8.0.5'
+//	implementation 'com.itextpdf:itext7-core:8.0.5'
 }
 
 tasks.named('test') {
