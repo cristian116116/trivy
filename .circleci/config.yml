@@ -1,5 +1,5 @@
 jobs:
-  security-scan:
+  build:
     docker:
       - image: cimg/openjdk:17.0
 
@@ -7,25 +7,19 @@ jobs:
       - checkout
 
       - run:
-          name: Install Trivy
-          command: |
-            sudo apt-get update
-            sudo apt-get install -y wget
-            wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
-            echo deb https://aquasecurity.github.io/trivy-repo/deb jammy main | sudo tee /etc/apt/sources.list.d/trivy.list
-            sudo apt-get update
-            sudo apt-get install -y trivy
+          name: Build
+          command: ./gradlew build cyclonedxBom
 
       - run:
-          name: Build SBOM
-          command: |
-            ./gradlew build cyclonedxBom
-
-      - run:
-          name: License scan
+          name: Trivy scan
           command: |
             trivy sbom \
               --scanners license \
               --severity CRITICAL \
               --exit-code 1 \
               build/reports/application.cdx.json
+
+workflows:
+  build-security:
+    jobs:
+      - build
