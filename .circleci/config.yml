@@ -9,6 +9,20 @@ jobs:
       - checkout
 
       - run:
+          name: Fix gradlew permissions
+          command: chmod +x ./gradlew
+
+      - run:
+          name: Install Trivy
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y wget
+            wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key | sudo apt-key add -
+            echo deb https://aquasecurity.github.io/trivy-repo/deb jammy main | sudo tee /etc/apt/sources.list.d/trivy.list
+            sudo apt-get update
+            sudo apt-get install -y trivy
+
+      - run:
           name: Build + SBOM
           command: ./gradlew build cyclonedxBom
 
